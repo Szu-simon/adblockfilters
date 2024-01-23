@@ -95,13 +95,11 @@ def sort(domainDict, isBlock, blackList):
             if fld in blackList:
                 continue
             if isBlock:
-                blockList.append("- '+.%s.'" %e
-                                 #
-                                 
                 blockList.append("- '+.%s.'" % fld)
-
-    return blockList
-    
+            else:
+                blockList.append("- '+.%s.'" % fld)
+        return blockList
+        
     # 备份全量域名，用于检查域名有效性生成黑名单
     blockList = sort(blockDict, True, [])
     unblockList = sort(unblockDict, False, [])
