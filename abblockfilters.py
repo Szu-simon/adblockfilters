@@ -69,37 +69,38 @@ def GetBlackList():
             blackList = f.readlines()
             blackList = list(map(lambda x: x.replace("\n", ""), blackList))
     return blackList
+def sort(domainDict, isBlock, blackList):
+    blockList = []
+    fldList = []
+    for item in domainDict:
+        fldList.append(item)
+    fldList.sort()  # 排序
 
-def CreatDNS(blockDict, unblockDict, fileName):
-    # 去重、排序
-    def sort(domainDict, isBlock, blackList):
-        blockList = []
-        fldList = []
-        for item in domainDict:
-            fldList.append(item)
-        fldList.sort() # 排序
-        for fld in fldList:
-            subdomainList = list(set(domainDict[fld])) # 去重
-            if '' in subdomainList: # 二级域名已被拦截，则干掉所有子域名
-                subdomainList = ['']
-            subdomainList = list(filter(None, subdomainList)) # 去空
-            if len(subdomainList) > 0:
-                subdomainList.sort() # 排序
-                for subdomain in subdomainList:
-                    if "%s.%s"%(subdomain, fld) in blackList:
-                        continue
-                    if isBlock:
-                        blockList.append("||%s.%s^"%(subdomain, fld))
-                    else:
-                        blockList.append("@@||%s.%s^"%(subdomain, fld))
-            else:
-                if fld in blackList:
+    for fld in fldList:
+        subdomainList = list(set(domainDict[fld]))  # 去重
+        if '' in subdomainList:  # 二级域名已被拦截，则干掉所有子域名
+            subdomainList = ['']
+        subdomainList = list(filter(None, subdomainList))  # 去空
+        if len(subdomainList) > 0:
+            subdomainList.sort()  # 排序
+            for subdomain in subdomainList:
+                full_domain = "%s.%s" % (subdomain, fld) if subdomain else fld
+                if full_domain in blackList:
                     continue
                 if isBlock:
-                    blockList.append("||%s^"%(fld))
+                    blockList.append("- '+.%s.'" % full_domain)
                 else:
-                    blockList.append("@@||%s^"%(fld))
-        return blockList
+                    blockList.append("- '+.%s.'" % full_domain)
+        else:
+            if fld in blackList:
+                continue
+            if isBlock:
+                blockList.append("- '+.%s.'" %e
+                                 #
+                                 
+                blockList.append("- '+.%s.'" % fld)
+
+    return blockList
     
     # 备份全量域名，用于检查域名有效性生成黑名单
     blockList = sort(blockDict, True, [])
