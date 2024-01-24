@@ -69,13 +69,15 @@ def GetBlackList():
             blackList = f.readlines()
             blackList = list(map(lambda x: x.replace("\n", ""), blackList))
     return blackList
-def sort(domainDict, isBlock, blackList):
+
+def CreatDNS(blockDict, unblockDict, fileName):
+    # 去重、排序
+    def sort(domainDict, isBlock, blackList):
     blockList = []
     fldList = []
     for item in domainDict:
         fldList.append(item)
     fldList.sort()  # 排序
-
     for fld in fldList:
         subdomainList = list(set(domainDict[fld]))  # 去重
         if '' in subdomainList:  # 二级域名已被拦截，则干掉所有子域名
@@ -88,16 +90,16 @@ def sort(domainDict, isBlock, blackList):
                 if full_domain in blackList:
                     continue
                 if isBlock:
-                    blockList.append("- '+.%s.'" % full_domain)
+                    blockList.append("- '+.%s.'" %(subdomain, fld))
                 else:
-                    blockList.append("- '+.%s.'" % full_domain)
+                    blockList.append("- '+.%s.'" %(subdomain, fld))
         else:
             if fld in blackList:
                 continue
             if isBlock:
-                blockList.append("- '+.%s.'" % fld)
+                blockList.append("- '+.%s.'" %(fld))
             else:
-                blockList.append("- '+.%s.'" % fld)
+                blockList.append("- '+.%s.'" %(fld))
         return blockList
         
     # 备份全量域名，用于检查域名有效性生成黑名单
