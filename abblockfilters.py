@@ -204,3 +204,8 @@ def Entry():
 
 if __name__ == '__main__':
     Entry()
+
+try:
+    # 现有代码逻辑
+except Exception as e:
+    print(f"发生错误：{e}")
